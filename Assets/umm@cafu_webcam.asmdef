@@ -1,0 +1,15 @@
+{
+    "name": "umm@cafu_webcam",
+    "references": [
+        "umm@cafu_core@v3",
+        "umm@cafu_data",
+        "umm@extra_unirx",
+        "umm@extra_zenject",
+        "umm@unirx",
+        "Zenject"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}

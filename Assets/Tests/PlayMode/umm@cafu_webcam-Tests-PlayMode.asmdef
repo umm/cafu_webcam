@@ -1,0 +1,17 @@
+{
+    "name": "umm@cafu_webcam-Tests-PlayMode",
+    "references": [
+        "umm@cafu_core@v3",
+        "umm@cafu_webcam",
+        "umm@extra_unirx",
+        "umm@unirx",
+        "Zenject",
+        "Zenject-TestFramework"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}
