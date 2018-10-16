@@ -135,6 +135,7 @@ namespace CAFU.WebCam.Domain.UseCase
                         Arguments.RequestedHeight
                     )
                 );
+            WebCamEventHandler.OnInitialized();
         }
 
         public struct InitializeArguments
