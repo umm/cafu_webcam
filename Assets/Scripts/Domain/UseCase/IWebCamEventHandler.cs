@@ -15,5 +15,7 @@ namespace CAFU.WebCam.Domain.UseCase
             IObservable<Texture> didRenderObservable,
             IObservable<Vector2Int> didConfirmTextureSizeObservable
         );
+
+        void OnInitialized();
     }
 }

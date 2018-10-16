@@ -15,6 +15,11 @@ namespace CAFU.WebCam.Presentation.Presenter
         void DidStop(Texture texture);
     }
 
+    public interface IWebCamInitializeEventHandler : IView
+    {
+        void OnInitialized();
+    }
+
     public interface IWebCamCaptureEventHandler : IView
     {
         void WillCapture(Texture texture);
