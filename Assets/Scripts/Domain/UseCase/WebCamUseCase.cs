@@ -135,7 +135,12 @@ namespace CAFU.WebCam.Domain.UseCase
                         Arguments.RequestedHeight
                     )
                 );
-            WebCamEventHandler.OnInitialized();
+            Observable
+                .EveryUpdate()
+                .Select(_ => WebCamEntity.WebCamTextureProperty.Value)
+                .Where(x => x != null && x.width > 4 && x.height > 4)
+                .Take(1)
+                .Subscribe(_ => WebCamEventHandler.OnInitialized());
         }
 
         public struct InitializeArguments
