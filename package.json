@@ -31,6 +31,7 @@
     "@umm/extra_unirx": "umm/extra_unirx#^1.0.0",
     "@umm/extra_zenject": "umm/extra_zenject#^1.0.0",
     "@umm/unirx": "umm/unirx#^2.0.0",
+    "@umm/unirx_tense": "umm/unirx_tense#^1.0.0",
     "@umm/zenject": "umm/zenject#^2.0.0"
   },
   "devDependencies": {}
