@@ -3,6 +3,8 @@ using System.Linq;
 using CAFU.Core;
 using CAFU.WebCam.Domain.Entity;
 using CAFU.WebCam.Domain.Structure.Data;
+using CAFU.WebCam.Domain.Structure.Presentation;
+using ExtraUniRx;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -22,12 +24,13 @@ namespace CAFU.WebCam.Domain.UseCase
         [Inject] private IWebCamEntity WebCamEntity { get; }
 
         // Translators
-        [Inject] private ITranslator<IWebCamEntity, IStorableTexture> StorableTextureTranslator { get; }
+        [Inject] private ITranslator<IWebCamEntity, StorableTexture> StorableTextureTranslator { get; }
+        [Inject] private ITranslator<IWebCamEntity, WebCamEvents> WebCamEventsTranslator { get; }
 
         // Presenters
         [Inject] private IWebCamController WebCamController { get; }
         [Inject] private IWebCamInitializer WebCamInitializer { get; }
-        [Inject] private IWebCamEventHandler WebCamEventHandler { get; }
+        [Inject] private IWebCamEventsProvider WebCamEventsProvider { get; }
 
         public void Initialize()
         {
@@ -38,17 +41,8 @@ namespace CAFU.WebCam.Domain.UseCase
             WebCamController.TriggerCaptureAsObservable().Subscribe(_ => Capture());
 
             // WebCam イベント操作 Presenter
-            //   WebCam の状態変化イベントを登録
-            WebCamEventHandler
-                .RegisterEvents(
-                    WebCamEntity.WillPlaySubject,
-                    WebCamEntity.DidPlaySubject,
-                    WebCamEntity.WillStopSubject,
-                    WebCamEntity.DidStopSubject,
-                    WebCamEntity.WillRenderWebCamTextureSubject,
-                    WebCamEntity.DidRenderWebCamTextureSubject,
-                    WebCamEntity.DidConfirmTextureSizeSubject
-                );
+            //   WebCam の状態変化イベントを提供
+            WebCamEventsProvider.Provide(WebCamEventsTranslator.Translate(WebCamEntity));
 
             // WebCam 初期化 Presenter
             WebCamInitializer.InitializeAsObservable().Subscribe(_ => InitializeCamera());
@@ -56,7 +50,8 @@ namespace CAFU.WebCam.Domain.UseCase
             // WebCamTexture サイズ確定
             //   XXX: イベントの伝搬が微妙
             WebCamEntity
-                .DidPlaySubject
+                .Play
+                .WhenDid()
                 .SelectMany(
                     _ =>
                         Observable
@@ -65,11 +60,12 @@ namespace CAFU.WebCam.Domain.UseCase
                             .Take(1)
                 )
                 .Select(_ => new Vector2Int(WebCamEntity.WebCamTextureProperty.Value.width, WebCamEntity.WebCamTextureProperty.Value.height))
-                .Subscribe(WebCamEntity.DidConfirmTextureSizeSubject);
+                .Subscribe(WebCamEntity.ConfirmTextureSize.Did);
             WebCamEntity
-                .DidConfirmTextureSizeSubject
+                .ConfirmTextureSize
+                .WhenDid()
                 .Select(_ => WebCamEntity.WebCamTextureProperty.Value)
-                .Subscribe(WebCamEntity.WillRenderWebCamTextureSubject);
+                .Subscribe(WebCamEntity.RenderWebCamTexture.Will);
         }
 
         private void Play()
@@ -79,9 +75,9 @@ namespace CAFU.WebCam.Domain.UseCase
                 return;
             }
 
-            WebCamEntity.WillPlaySubject.OnNext(WebCamEntity.WebCamTextureProperty.Value);
+            WebCamEntity.Play.Will(WebCamEntity.WebCamTextureProperty.Value);
             WebCamEntity.WebCamTextureProperty.Value.Play();
-            WebCamEntity.DidPlaySubject.OnNext(WebCamEntity.WebCamTextureProperty.Value);
+            WebCamEntity.Play.Did(WebCamEntity.WebCamTextureProperty.Value);
         }
 
         private void Stop()
@@ -91,9 +87,9 @@ namespace CAFU.WebCam.Domain.UseCase
                 return;
             }
 
-            WebCamEntity.WillStopSubject.OnNext(WebCamEntity.WebCamTextureProperty.Value);
+            WebCamEntity.Stop.Will(WebCamEntity.WebCamTextureProperty.Value);
             WebCamEntity.WebCamTextureProperty.Value.Stop();
-            WebCamEntity.DidStopSubject.OnNext(WebCamEntity.WebCamTextureProperty.Value);
+            WebCamEntity.Stop.Did(WebCamEntity.WebCamTextureProperty.Value);
         }
 
         private void Capture()
@@ -103,13 +99,14 @@ namespace CAFU.WebCam.Domain.UseCase
                 return;
             }
 
-            WebCamEntity.WillCaptureSubject.OnNext(WebCamEntity.WebCamTextureProperty.Value);
+            WebCamEntity.Capture.Will(WebCamEntity.WebCamTextureProperty.Value);
             WebCamEntity.StorableTextureProperty.OnNext(StorableTextureTranslator.Translate(WebCamEntity));
-            WebCamEntity.DidCaptureSubject.OnNext(WebCamEntity.WebCamTextureProperty.Value);
+            WebCamEntity.Capture.Did(WebCamEntity.WebCamTextureProperty.Value);
         }
 
         private void InitializeCamera()
         {
+            WebCamEntity.Initialize.Will();
             if (WebCamTexture.devices.Length == 0)
             {
                 WebCamEntity.WebCamTextureProperty.OnError(new InvalidOperationException("WebCamTexture.devices length is zero. Please confirm permission for Camera access."));
@@ -135,7 +132,7 @@ namespace CAFU.WebCam.Domain.UseCase
                         Arguments.RequestedHeight
                     )
                 );
-            WebCamEventHandler.OnInitialized();
+            WebCamEntity.Initialize.Did();
         }
 
         public struct InitializeArguments

@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using CAFU.WebCam.Domain.Structure.Presentation;
 using CAFU.WebCam.Domain.UseCase;
 using UniRx;
-using UnityEngine;
 using Zenject;
 
 namespace CAFU.WebCam.Presentation.Presenter
@@ -9,7 +11,7 @@ namespace CAFU.WebCam.Presentation.Presenter
     public class WebCamPresenter :
         IWebCamInitializer,
         IWebCamController,
-        IWebCamEventHandler
+        IWebCamEventsProvider
     {
         [Inject] private IPlayWebCamTrigger PlayWebCamTrigger { get; }
 
@@ -17,40 +19,13 @@ namespace CAFU.WebCam.Presentation.Presenter
 
         [Inject] private ICaptureWebCamTrigger CaptureWebCamTrigger { get; }
 
-        [InjectOptional] private IWebCamTextureRenderer WebCamTextureRenderer { get; }
-
         [Inject] private IInitializeWebCamTrigger InitializeWebCamTrigger { get; }
 
-        [InjectOptional] private IWebCamPlayEventHandler WebCamPlayEventHandler { get; }
-        [InjectOptional] private IWebCamStopEventHandler WebCamStopEventHandler { get; }
-        [InjectOptional] private IWebCamInitializeEventHandler WebCamInitializeEventHandler { get; }
-        [InjectOptional] private IWebCamConfirmTextureSizeEventHandler WebCamConfirmTextureSizeEventHandler { get; }
+        [Inject] private List<IWebCamEventsHandler> WebCamEventsHandlers { get; }
 
         public IObservable<Unit> InitializeAsObservable()
         {
             return InitializeWebCamTrigger.TriggerAsObservable();
-        }
-
-        public void RegisterEvents(
-            IObservable<Texture> willPlayObservable,
-            IObservable<Texture> didPlayObservable,
-            IObservable<Texture> willStopObservable,
-            IObservable<Texture> didStopObservable,
-            IObservable<Texture> willRenderObservable,
-            IObservable<Texture> didRenderObservable,
-            IObservable<Vector2Int> didConfirmTextureSizeObservable
-        )
-        {
-            // キャプチャイベントのみ購読
-            didPlayObservable.Subscribe(x => WebCamPlayEventHandler?.DidPlay(x));
-            willStopObservable.Subscribe(x => WebCamStopEventHandler?.WillStop(x));
-            willRenderObservable.Subscribe(x => WebCamTextureRenderer?.Render(x));
-            didConfirmTextureSizeObservable.Subscribe(x => WebCamConfirmTextureSizeEventHandler?.DidConfirmTextureSize(x));
-        }
-
-        void IWebCamEventHandler.OnInitialized()
-        {
-            WebCamInitializeEventHandler?.OnInitialized();
         }
 
         public IObservable<Unit> TriggerPlayAsObservable()
@@ -66,6 +41,11 @@ namespace CAFU.WebCam.Presentation.Presenter
         public IObservable<Unit> TriggerCaptureAsObservable()
         {
             return CaptureWebCamTrigger.TriggerAsObservable();
+        }
+
+        void IWebCamEventsProvider.Provide(WebCamEvents events)
+        {
+            WebCamEventsHandlers.ToList().ForEach(x => x.Handle(events));
         }
     }
 }
