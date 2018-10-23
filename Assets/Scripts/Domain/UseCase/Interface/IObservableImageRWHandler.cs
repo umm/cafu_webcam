@@ -7,7 +7,7 @@ namespace CAFU.WebCam.Domain.UseCase
 {
     public interface IObservableImageRWHandler : IObservableRWHandler
     {
-        new IObservable<IStorableTexture> ReadAsObservable(Uri uri);
-        IObservable<Unit> WriteAsObservable(Uri uri, IStorableTexture entity);
+        new IObservable<StorableTexture> ReadAsObservable(Uri uri);
+        IObservable<Unit> WriteAsObservable(Uri uri, StorableTexture entity);
     }
 }

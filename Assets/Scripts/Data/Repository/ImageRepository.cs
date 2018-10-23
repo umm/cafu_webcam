@@ -11,7 +11,7 @@ namespace CAFU.WebCam.Data.Repository
 {
     public class ImageRepository : ObservableRWRepository, IObservableImageRWHandler
     {
-        IObservable<IStorableTexture> IObservableImageRWHandler.ReadAsObservable(Uri uri)
+        IObservable<StorableTexture> IObservableImageRWHandler.ReadAsObservable(Uri uri)
         {
             return Observable
                 .Zip(
@@ -25,13 +25,12 @@ namespace CAFU.WebCam.Data.Repository
                         var entity = JsonUtility.FromJson<StorableTexture>(Encoding.UTF8.GetString(xs[0].ToArray()));
                         // 2つ目を画像データとしてセット
                         entity.Data = xs[1];
-                        // 明示的キャストにしないとコンパイルエラーになる（内部的に Boxing が走る）
-                        return (IStorableTexture)entity;
+                        return entity;
                     }
                 );
         }
 
-        public IObservable<Unit> WriteAsObservable(Uri uri, IStorableTexture entity)
+        public IObservable<Unit> WriteAsObservable(Uri uri, StorableTexture entity)
         {
             return Observable
                 .Zip(

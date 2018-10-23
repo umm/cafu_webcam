@@ -7,6 +7,8 @@ using CAFU.Data.Utility;
 using CAFU.WebCam.Application;
 using CAFU.WebCam.Domain.Entity;
 using CAFU.WebCam.Domain.Structure.Data;
+using CAFU.WebCam.Domain.Structure.Presentation;
+using ExtraUniRx;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -27,12 +29,14 @@ namespace CAFU.WebCam.Domain.UseCase
 
         // Presenters
         [Inject] private IStoredTextureHandler StoredTextureHandler { get; }
+        [Inject] private IStoredTextureEventsProvider StoredTextureEventsProvider { get; }
 
         // Repositories
         [Inject] private IObservableImageRWHandler ObservableImageRWHandler { get; }
 
         // Translators
-        [Inject] private ITranslator<IWebCamEntity, IStorableTexture> StorableTextureTranslator { get; }
+        [Inject] private ITranslator<IWebCamEntity, StorableTexture> StorableTextureTranslator { get; }
+        [Inject] private ITranslator<IWebCamEntity, StoredTextureEvents> StoredTextureEventsTranslator { get; }
 
         [InjectOptional(Id = Constant.InjectId.UriBuilder)]
         private Func<string, Uri> UriBuilder { get; } =
@@ -52,38 +56,46 @@ namespace CAFU.WebCam.Domain.UseCase
 
             // WebCam イベント操作 Presenter
             //   WebCam の状態変化イベントを登録
-            StoredTextureHandler
-                .RegisterEvents(
-                    WebCamEntity.WillRenderStoredTextureSubject
-                );
-        }
-
-        private void Save()
-        {
-            ObservableImageRWHandler
-                .WriteAsObservable(
-                    UriBuilder(Arguments.Name),
-                    WebCamEntity.StorableTextureProperty.Value
-                )
-                .Subscribe();
+            //   Translator を通して Entity から抽出した Subject で構成される Structure を渡す
+            StoredTextureEventsProvider.Provide(StoredTextureEventsTranslator.Translate(WebCamEntity));
         }
 
         private void Load()
         {
+            WebCamEntity.Load.Will();
             ObservableImageRWHandler
                 .ReadAsObservable(
                     UriBuilder(Arguments.Name)
                 )
                 // MainThread に戻す前に配列の変換を行っておく
-                .Select(x => new Tuple<IStorableTexture, IEnumerable<Color32>>(x, ArrayConverter.ByteArrayToColor32Array(x.Data)))
+                .Select(x => new {StorableTexture = x, Data = ArrayConverter.ByteArrayToColor32Array(x.Data)})
                 // CreateTexture2D 内で UnityEngine.Texture2D などの API を触るため、MeinThread に戻す
                 .ObserveOnMainThread()
-                .Select(t => CreateTexture2D(t.Item1, t.Item2))
+                .Select(x => CreateTexture2D(x.StorableTexture, x.Data))
                 // OnCompleted は流さない
-                .Subscribe(x => WebCamEntity.WillRenderStoredTextureSubject.OnNext(x));
+                .Subscribe(
+                    x =>
+                    {
+                        WebCamEntity.Load.Did();
+                        WebCamEntity.RenderStoredTexture.Did(x);
+                    }
+                );
         }
 
-        private static Texture2D CreateTexture2D(IStorableTexture storableTexture, IEnumerable<Color32> colors)
+        private void Save()
+        {
+            WebCamEntity.Save.Will();
+            ObservableImageRWHandler
+                .WriteAsObservable(
+                    UriBuilder(Arguments.Name),
+                    WebCamEntity.StorableTextureProperty.Value
+                )
+                // WebCamEntity.Save の先で UnityEngine 系の API を触るため、MainThread に戻す
+                .ObserveOnMainThread()
+                .Subscribe(_ => WebCamEntity.Save.Did());
+        }
+
+        private static Texture2D CreateTexture2D(StorableTexture storableTexture, IEnumerable<Color32> colors)
         {
             var texture = new Texture2D(storableTexture.Width, storableTexture.Height, storableTexture.TextureFormat, storableTexture.MipChain);
             texture.SetPixels32(colors.ToArray());

@@ -1,6 +1,6 @@
 using System;
+using CAFU.WebCam.Domain.Structure.Presentation;
 using UniRx;
-using UnityEngine;
 using IPresenter = CAFU.Core.IPresenter;
 
 namespace CAFU.WebCam.Domain.UseCase
@@ -9,8 +9,5 @@ namespace CAFU.WebCam.Domain.UseCase
     {
         IObservable<Unit> LoadAsObservable();
         IObservable<Unit> SaveAsObservable();
-        void RegisterEvents(
-            IObservable<Texture> renderObservable
-        );
     }
 }

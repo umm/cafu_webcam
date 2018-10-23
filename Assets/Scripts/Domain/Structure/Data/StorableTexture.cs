@@ -5,17 +5,8 @@ using UnityEngine;
 
 namespace CAFU.WebCam.Domain.Structure.Data
 {
-    public interface IStorableTexture : IStructure
-    {
-        int Width { get; }
-        int Height { get; }
-        TextureFormat TextureFormat { get; }
-        bool MipChain { get; }
-        IEnumerable<byte> Data { get; }
-    }
-
     [Serializable]
-    public struct StorableTexture : IStorableTexture
+    public struct StorableTexture : IStructure
     {
         [SerializeField] private int width;
         [SerializeField] private int height;

@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace CAFU.WebCam.Domain.Factory
 {
-    public class StorableTextureStructureTranslator : ITranslator<IWebCamEntity, IStorableTexture>
+    public class StorableTextureTranslator : ITranslator<IWebCamEntity, StorableTexture>
     {
-        public IStorableTexture Translate(IWebCamEntity param)
+        public StorableTexture Translate(IWebCamEntity param)
         {
             return new StorableTexture
             {
