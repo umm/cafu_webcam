@@ -9,8 +9,8 @@ namespace CAFU.WebCam.Domain.Structure.Presentation
     {
         public ITenseSubject Load { get; private set; }
         public ITenseSubject Save { get; private set; }
-        public ITenseSubject<Texture> Render { get; set; }
-        public ITenseSubject Clear { get; set; }
+        public ITenseSubject<Texture> Render { get; private set; }
+        public ITenseSubject Clear { get; private set; }
 
         public class Factory : IFactory<ITenseSubject, ITenseSubject, ITenseSubject<Texture>, ITenseSubject, StoredTextureEvents>
         {
