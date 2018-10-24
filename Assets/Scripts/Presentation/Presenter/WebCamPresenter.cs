@@ -10,8 +10,7 @@ namespace CAFU.WebCam.Presentation.Presenter
 {
     public class WebCamPresenter :
         IWebCamInitializer,
-        IWebCamController,
-        IWebCamEventsProvider
+        IWebCamController
     {
         [Inject] private IPlayWebCamTrigger PlayWebCamTrigger { get; }
 
@@ -20,8 +19,6 @@ namespace CAFU.WebCam.Presentation.Presenter
         [Inject] private ICaptureWebCamTrigger CaptureWebCamTrigger { get; }
 
         [Inject] private IInitializeWebCamTrigger InitializeWebCamTrigger { get; }
-
-        [Inject] private List<IWebCamEventsHandler> WebCamEventsHandlers { get; }
 
         public IObservable<Unit> InitializeAsObservable()
         {
@@ -41,11 +38,6 @@ namespace CAFU.WebCam.Presentation.Presenter
         public IObservable<Unit> TriggerCaptureAsObservable()
         {
             return CaptureWebCamTrigger.TriggerAsObservable();
-        }
-
-        void IWebCamEventsProvider.Provide(WebCamEvents events)
-        {
-            WebCamEventsHandlers.ToList().ForEach(x => x.Handle(events));
         }
     }
 }

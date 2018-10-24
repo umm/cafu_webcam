@@ -1,4 +1,5 @@
 using CAFU.Core;
+using CAFU.WebCam.Domain.Entity;
 using ExtraUniRx;
 using UnityEngine;
 using Zenject;
@@ -7,23 +8,17 @@ namespace CAFU.WebCam.Domain.Structure.Presentation
 {
     public struct StoredTextureEvents : IStructure
     {
-        public ITenseSubject Load { get; private set; }
-        public ITenseSubject Save { get; private set; }
-        public ITenseSubject<Texture> Render { get; private set; }
-        public ITenseSubject Clear { get; private set; }
+        public ITenseSubject Load { get; }
+        public ITenseSubject Save { get; }
+        public ITenseSubject<Texture> Render { get; }
+        public ITenseSubject Clear { get; }
 
-        public class Factory : IFactory<ITenseSubject, ITenseSubject, ITenseSubject<Texture>, ITenseSubject, StoredTextureEvents>
+        public StoredTextureEvents(IWebCamEntity entity)
         {
-            public StoredTextureEvents Create(ITenseSubject param1, ITenseSubject param2, ITenseSubject<Texture> param3, ITenseSubject param4)
-            {
-                return new StoredTextureEvents
-                {
-                    Load = param1,
-                    Save = param2,
-                    Render = param3,
-                    Clear = param4,
-                };
-            }
+            Load = entity.Load;
+            Save = entity.Save;
+            Render = entity.RenderStoredTexture;
+            Clear = entity.ClearStoredTexture;
         }
     }
 }
