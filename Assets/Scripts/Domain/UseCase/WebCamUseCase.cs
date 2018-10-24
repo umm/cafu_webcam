@@ -25,12 +25,10 @@ namespace CAFU.WebCam.Domain.UseCase
 
         // Translators
         [Inject] private ITranslator<IWebCamEntity, StorableTexture> StorableTextureTranslator { get; }
-        [Inject] private ITranslator<IWebCamEntity, WebCamEvents> WebCamEventsTranslator { get; }
 
         // Presenters
         [Inject] private IWebCamController WebCamController { get; }
         [Inject] private IWebCamInitializer WebCamInitializer { get; }
-        [Inject] private IWebCamEventsProvider WebCamEventsProvider { get; }
 
         public void Initialize()
         {
@@ -39,10 +37,6 @@ namespace CAFU.WebCam.Domain.UseCase
             WebCamController.TriggerPlayAsObservable().Subscribe(_ => Play());
             WebCamController.TriggerStopAsObservable().Subscribe(_ => Stop());
             WebCamController.TriggerCaptureAsObservable().Subscribe(_ => Capture());
-
-            // WebCam イベント操作 Presenter
-            //   WebCam の状態変化イベントを提供
-            WebCamEventsProvider.Provide(WebCamEventsTranslator.Translate(WebCamEntity));
 
             // WebCam 初期化 Presenter
             WebCamInitializer.InitializeAsObservable().Subscribe(_ => InitializeCamera());

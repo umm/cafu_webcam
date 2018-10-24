@@ -29,14 +29,12 @@ namespace CAFU.WebCam.Domain.UseCase
 
         // Presenters
         [Inject] private IStoredTextureHandler StoredTextureHandler { get; }
-        [Inject] private IStoredTextureEventsProvider StoredTextureEventsProvider { get; }
 
         // Repositories
         [Inject] private IObservableImageRWHandler ObservableImageRWHandler { get; }
 
         // Translators
         [Inject] private ITranslator<IWebCamEntity, StorableTexture> StorableTextureTranslator { get; }
-        [Inject] private ITranslator<IWebCamEntity, StoredTextureEvents> StoredTextureEventsTranslator { get; }
 
         [InjectOptional(Id = Constant.InjectId.UriBuilder)]
         private Func<string, Uri> UriBuilder { get; } =
@@ -53,11 +51,6 @@ namespace CAFU.WebCam.Domain.UseCase
         {
             StoredTextureHandler.SaveAsObservable().Subscribe(_ => Save());
             StoredTextureHandler.LoadAsObservable().Subscribe(_ => Load());
-
-            // WebCam イベント操作 Presenter
-            //   WebCam の状態変化イベントを登録
-            //   Translator を通して Entity から抽出した Subject で構成される Structure を渡す
-            StoredTextureEventsProvider.Provide(StoredTextureEventsTranslator.Translate(WebCamEntity));
         }
 
         private void Load()

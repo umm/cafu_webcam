@@ -11,12 +11,10 @@ using Zenject;
 namespace CAFU.WebCam.Presentation.Presenter
 {
     public class StoredTexturePresenter :
-        IStoredTextureHandler,
-        IStoredTextureEventsProvider
+        IStoredTextureHandler
     {
         [InjectOptional] private ILoadCapturedTextureTrigger LoadCapturedTextureTrigger { get; }
         [InjectOptional] private ISaveCapturedTextureTrigger SaveCapturedTextureTrigger { get; }
-        [Inject] private List<IStoredTextureEventHandler> StoredTextureEventHandlers { get; }
 
         public IObservable<Unit> LoadAsObservable()
         {
@@ -28,11 +26,6 @@ namespace CAFU.WebCam.Presentation.Presenter
         {
             ZenjectAssert.IsInjected(SaveCapturedTextureTrigger);
             return SaveCapturedTextureTrigger?.TriggerAsObservable() ?? Observable.Empty<Unit>();
-        }
-
-        public void Provide(StoredTextureEvents events)
-        {
-            StoredTextureEventHandlers.ForEach(x => x.Handle(events));
         }
     }
 }
