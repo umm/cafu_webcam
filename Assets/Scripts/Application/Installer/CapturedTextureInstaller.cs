@@ -1,10 +1,7 @@
 using CAFU.Data.Data.DataStore;
 using CAFU.WebCam.Data.Repository;
-using CAFU.WebCam.Domain.Structure.Presentation;
 using CAFU.WebCam.Domain.UseCase;
 using CAFU.WebCam.Presentation.Presenter;
-using ExtraUniRx;
-using UnityEngine;
 using Zenject;
 
 namespace CAFU.WebCam.Application.Installer
@@ -29,15 +26,6 @@ namespace CAFU.WebCam.Application.Installer
 
             // Presenters
             Container.BindInterfacesAndSelfTo<StoredTexturePresenter>().AsCached();
-
-            // Factories
-            Container.BindIFactory<
-                ITenseSubject,          // Load
-                ITenseSubject,          // Save
-                ITenseSubject<Texture>, // RenderWebCamTexture
-                ITenseSubject,          // Clear
-                StoredTextureEvents
-            >().FromFactory<StoredTextureEvents.Factory>();
         }
     }
 }
