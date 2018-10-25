@@ -3,7 +3,6 @@ using System.Linq;
 using CAFU.Core;
 using CAFU.WebCam.Domain.Entity;
 using CAFU.WebCam.Domain.Structure.Data;
-using CAFU.WebCam.Domain.Structure.Presentation;
 using ExtraUniRx;
 using UniRx;
 using UnityEngine;
@@ -59,7 +58,7 @@ namespace CAFU.WebCam.Domain.UseCase
                 .ConfirmTextureSize
                 .WhenDid()
                 .Select(_ => WebCamEntity.WebCamTextureProperty.Value)
-                .Subscribe(WebCamEntity.RenderWebCamTexture.Will);
+                .Subscribe(WebCamEntity.RenderWebCamTexture.Did);
         }
 
         private void Play()
