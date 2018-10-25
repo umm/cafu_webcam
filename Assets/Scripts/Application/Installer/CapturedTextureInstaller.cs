@@ -12,6 +12,7 @@ namespace CAFU.WebCam.Application.Installer
         public override void InstallBindings()
         {
             EntityInstaller.Install(Container);
+            TranslatorInstaller.Install(Container);
 
             // Structures
             Container.Bind<StoredTextureEvents>().AsCached();

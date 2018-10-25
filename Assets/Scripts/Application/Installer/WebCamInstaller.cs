@@ -1,5 +1,4 @@
-﻿using CAFU.WebCam.Domain.Factory;
-using CAFU.WebCam.Domain.Structure.Presentation;
+﻿using CAFU.WebCam.Domain.Structure.Presentation;
 using CAFU.WebCam.Domain.UseCase;
 using CAFU.WebCam.Presentation.Presenter;
 using Zenject;
@@ -11,6 +10,7 @@ namespace CAFU.WebCam.Application.Installer
         public override void InstallBindings()
         {
             EntityInstaller.Install(Container);
+            TranslatorInstaller.Install(Container);
 
             // Structures
             Container.Bind<WebCamEvents>().AsCached();
@@ -30,9 +30,6 @@ namespace CAFU.WebCam.Application.Installer
 
             // Presenters
             Container.BindInterfacesAndSelfTo<WebCamPresenter>().AsCached();
-
-            // Translators
-            Container.BindInterfacesTo<StorableTextureTranslator>().AsCached();
         }
     }
 }

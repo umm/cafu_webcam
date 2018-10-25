@@ -17,14 +17,12 @@ namespace CAFU.WebCam.Domain.Entity
         ITenseSubject<Texture> Play { get; }
         ITenseSubject<Texture> Stop { get; }
         ITenseSubject<Texture> RenderWebCamTexture { get; }
-        // XXX: Factory の制限により型引数の数が多いと NG…
         ITenseSubject ClearWebCamTexture { get; }
         ITenseSubject<Texture> Capture { get; }
         ITenseSubject<Vector2Int> ConfirmTextureSize { get; }
         ITenseSubject Save { get; }
         ITenseSubject Load { get; }
         ITenseSubject<Texture> RenderStoredTexture { get; }
-        // XXX: コッチは型引数の数問題ないけど、分けた方がヨサソウ
         ITenseSubject ClearStoredTexture { get; }
 
         bool HasResolutionConfirmed();

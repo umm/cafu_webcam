@@ -2,7 +2,6 @@ using CAFU.Core;
 using CAFU.WebCam.Domain.Entity;
 using ExtraUniRx;
 using UnityEngine;
-using Zenject;
 
 namespace CAFU.WebCam.Domain.Structure.Presentation
 {
