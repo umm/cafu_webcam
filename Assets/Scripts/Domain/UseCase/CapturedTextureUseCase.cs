@@ -64,13 +64,14 @@ namespace CAFU.WebCam.Domain.UseCase
                 .Select(x => new {StorableTexture = x, Data = ArrayConverter.ByteArrayToColor32Array(x.Data)})
                 // CreateTexture2D 内で UnityEngine.Texture2D などの API を触るため、MeinThread に戻す
                 .ObserveOnMainThread()
-                .Select(x => CreateTexture2D(x.StorableTexture, x.Data))
+                .Select(x => new {Texture2D = CreateTexture2D(x.StorableTexture, x.Data), x.StorableTexture.RotationAngle})
                 // OnCompleted は流さない
                 .Subscribe(
                     x =>
                     {
                         WebCamEntity.Load.Did();
-                        WebCamEntity.RenderStoredTexture.Did(x);
+                        WebCamEntity.RenderStoredTexture.Did(x.Texture2D);
+                        WebCamEntity.ConfirmTextureRotationAngle.Did(x.RotationAngle);
                     }
                 );
         }

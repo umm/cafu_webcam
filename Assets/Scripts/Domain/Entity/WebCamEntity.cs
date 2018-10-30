@@ -24,6 +24,7 @@ namespace CAFU.WebCam.Domain.Entity
         ITenseSubject Load { get; }
         ITenseSubject<Texture> RenderStoredTexture { get; }
         ITenseSubject ClearStoredTexture { get; }
+        ITenseSubject<int> ConfirmTextureRotationAngle { get; }
 
         bool HasResolutionConfirmed();
     }
@@ -46,6 +47,7 @@ namespace CAFU.WebCam.Domain.Entity
         public ITenseSubject Load { get; } = new TenseSubject();
         public ITenseSubject<Texture> RenderStoredTexture { get; } = new TenseSubject<Texture>();
         public ITenseSubject ClearStoredTexture { get; } = new TenseSubject();
+        public ITenseSubject<int> ConfirmTextureRotationAngle { get; } = new TenseSubject<int>();
 
         public bool HasResolutionConfirmed()
         {

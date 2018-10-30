@@ -2,7 +2,6 @@ using CAFU.Core;
 using CAFU.WebCam.Domain.Entity;
 using ExtraUniRx;
 using UnityEngine;
-using Zenject;
 
 namespace CAFU.WebCam.Domain.Structure.Presentation
 {
@@ -12,6 +11,7 @@ namespace CAFU.WebCam.Domain.Structure.Presentation
         public ITenseSubject Save { get; }
         public ITenseSubject<Texture> Render { get; }
         public ITenseSubject Clear { get; }
+        public ITenseSubject<int> ConfirmTextureRotationAngle { get; }
 
         public StoredTextureEvents(IWebCamEntity entity)
         {
@@ -19,6 +19,7 @@ namespace CAFU.WebCam.Domain.Structure.Presentation
             Save = entity.Save;
             Render = entity.RenderStoredTexture;
             Clear = entity.ClearStoredTexture;
+            ConfirmTextureRotationAngle = entity.ConfirmTextureRotationAngle;
         }
     }
 }
