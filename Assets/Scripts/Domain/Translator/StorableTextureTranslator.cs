@@ -16,6 +16,7 @@ namespace CAFU.WebCam.Domain.Factory
                 Height = param.WebCamTextureProperty.Value.height,
                 TextureFormat = TextureFormat.RGBA32,
                 MipChain = false,
+                RotationAngle = param.WebCamTextureProperty.Value.videoRotationAngle,
                 Data = ArrayConverter.Color32ArrayToByteArray(param.WebCamTextureProperty.Value.GetPixels32()),
             };
         }

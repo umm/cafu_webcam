@@ -16,7 +16,7 @@ namespace CAFU.WebCam.Domain.Entity
         ITenseSubject Initialize { get; }
         ITenseSubject<Texture> Play { get; }
         ITenseSubject<Texture> Stop { get; }
-        ITenseSubject<Texture> RenderWebCamTexture { get; }
+        ITenseSubject<WebCamTexture> RenderWebCamTexture { get; }
         ITenseSubject ClearWebCamTexture { get; }
         ITenseSubject<Texture> Capture { get; }
         ITenseSubject<Vector2Int> ConfirmTextureSize { get; }
@@ -24,6 +24,7 @@ namespace CAFU.WebCam.Domain.Entity
         ITenseSubject Load { get; }
         ITenseSubject<Texture> RenderStoredTexture { get; }
         ITenseSubject ClearStoredTexture { get; }
+        ITenseSubject<int> ConfirmTextureRotationAngle { get; }
 
         bool HasResolutionConfirmed();
     }
@@ -38,7 +39,7 @@ namespace CAFU.WebCam.Domain.Entity
         public ITenseSubject Initialize { get; } = new TenseSubject();
         public ITenseSubject<Texture> Play { get; } = new TenseSubject<Texture>();
         public ITenseSubject<Texture> Stop { get; } = new TenseSubject<Texture>();
-        public ITenseSubject<Texture> RenderWebCamTexture { get; } = new TenseSubject<Texture>();
+        public ITenseSubject<WebCamTexture> RenderWebCamTexture { get; } = new TenseSubject<WebCamTexture>();
         public ITenseSubject ClearWebCamTexture { get; } = new TenseSubject();
         public ITenseSubject<Texture> Capture { get; } = new TenseSubject<Texture>();
         public ITenseSubject<Vector2Int> ConfirmTextureSize { get; } = new TenseSubject<Vector2Int>();
@@ -46,6 +47,7 @@ namespace CAFU.WebCam.Domain.Entity
         public ITenseSubject Load { get; } = new TenseSubject();
         public ITenseSubject<Texture> RenderStoredTexture { get; } = new TenseSubject<Texture>();
         public ITenseSubject ClearStoredTexture { get; } = new TenseSubject();
+        public ITenseSubject<int> ConfirmTextureRotationAngle { get; } = new TenseSubject<int>();
 
         public bool HasResolutionConfirmed()
         {

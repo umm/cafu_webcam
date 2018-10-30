@@ -10,7 +10,7 @@ namespace CAFU.WebCam.Domain.Structure.Presentation
         public ITenseSubject Initialize { get; }
         public ITenseSubject<Texture> Play { get; }
         public ITenseSubject<Texture> Stop { get; }
-        public ITenseSubject<Texture> Render { get; }
+        public ITenseSubject<WebCamTexture> Render { get; }
         public ITenseSubject Clear { get; }
         public ITenseSubject<Texture> Capture { get; }
         public ITenseSubject<Vector2Int> ConfirmTextureSize { get; }
