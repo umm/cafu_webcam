@@ -16,18 +16,18 @@ namespace CAFU.WebCam.Domain.UseCase
 
     public class WebCamUseCase : IWebCamUseCase, IInitializable
     {
-        [Inject] private InitializeArguments Arguments { get; }
+        [Inject] private InitializeArguments Arguments { get; set; }
 
         // Entities
         // XXX: WebCamEntity の分割は検討しても良いかも
-        [Inject] private IWebCamEntity WebCamEntity { get; }
+        [Inject] private IWebCamEntity WebCamEntity { get; set; }
 
         // Translators
-        [Inject] private ITranslator<IWebCamEntity, StorableTexture> StorableTextureTranslator { get; }
+        [Inject] private ITranslator<IWebCamEntity, StorableTexture> StorableTextureTranslator { get; set; }
 
         // Presenters
-        [Inject] private IWebCamController WebCamController { get; }
-        [Inject] private IWebCamInitializer WebCamInitializer { get; }
+        [Inject] private IWebCamController WebCamController { get; set; }
+        [Inject] private IWebCamInitializer WebCamInitializer { get; set; }
 
         public void Initialize()
         {

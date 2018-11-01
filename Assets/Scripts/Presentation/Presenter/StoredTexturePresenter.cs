@@ -13,8 +13,8 @@ namespace CAFU.WebCam.Presentation.Presenter
     public class StoredTexturePresenter :
         IStoredTextureHandler
     {
-        [InjectOptional] private ILoadCapturedTextureTrigger LoadCapturedTextureTrigger { get; }
-        [InjectOptional] private ISaveCapturedTextureTrigger SaveCapturedTextureTrigger { get; }
+        [InjectOptional] private ILoadCapturedTextureTrigger LoadCapturedTextureTrigger { get; set; }
+        [InjectOptional] private ISaveCapturedTextureTrigger SaveCapturedTextureTrigger { get; set; }
 
         public IObservable<Unit> LoadAsObservable()
         {

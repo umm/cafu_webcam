@@ -22,25 +22,25 @@ namespace CAFU.WebCam.Domain.UseCase
     public class CapturedTextureUseCase : ICapturedTextureUseCase, IInitializable
     {
         // Primitives
-        [Inject] private InitializeArguments Arguments { get; }
+        [Inject] private InitializeArguments Arguments { get; set; }
 
         // Entities
-        [Inject] private IWebCamEntity WebCamEntity { get; }
+        [Inject] private IWebCamEntity WebCamEntity { get; set; }
 
         // Presenters
-        [Inject] private IStoredTextureHandler StoredTextureHandler { get; }
+        [Inject] private IStoredTextureHandler StoredTextureHandler { get; set; }
 
         // Repositories
-        [Inject] private IObservableImageRWHandler ObservableImageRWHandler { get; }
+        [Inject] private IObservableImageRWHandler ObservableImageRWHandler { get; set; }
 
         // Translators
-        [Inject] private ITranslator<IWebCamEntity, StorableTexture> StorableTextureTranslator { get; }
+        [Inject] private ITranslator<IWebCamEntity, StorableTexture> StorableTextureTranslator { get; set; }
 
         // Factories
-        [Inject] public IFactory<Texture2D, int, bool, RenderableTexture> RenderableTextureFactory { get; private set; }
+        [Inject] private IFactory<Texture2D, int, bool, RenderableTexture> RenderableTextureFactory { get; set; }
 
         [InjectOptional(Id = Constant.InjectId.UriBuilder)]
-        private Func<string, Uri> UriBuilder { get; } =
+        private Func<string, Uri> UriBuilder { get; set; } =
             (name) =>
                 new UriBuilder
                 {
@@ -49,7 +49,6 @@ namespace CAFU.WebCam.Domain.UseCase
                     Path = Path.Combine(UnityEngine.Application.persistentDataPath, "Temp", name)
                 }.Uri;
 
-        [Inject]
         public void Initialize()
         {
             StoredTextureHandler.SaveAsObservable().Subscribe(_ => Save());
