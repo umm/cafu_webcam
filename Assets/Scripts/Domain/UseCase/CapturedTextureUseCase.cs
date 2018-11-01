@@ -36,6 +36,9 @@ namespace CAFU.WebCam.Domain.UseCase
         // Translators
         [Inject] private ITranslator<IWebCamEntity, StorableTexture> StorableTextureTranslator { get; }
 
+        // Factories
+        [Inject] public IFactory<Texture2D, int, bool, RenderableTexture> RenderableTextureFactory { get; private set; }
+
         [InjectOptional(Id = Constant.InjectId.UriBuilder)]
         private Func<string, Uri> UriBuilder { get; } =
             (name) =>
@@ -64,14 +67,15 @@ namespace CAFU.WebCam.Domain.UseCase
                 .Select(x => new {StorableTexture = x, Data = ArrayConverter.ByteArrayToColor32Array(x.Data)})
                 // CreateTexture2D 内で UnityEngine.Texture2D などの API を触るため、MeinThread に戻す
                 .ObserveOnMainThread()
-                .Select(x => new {Texture2D = CreateTexture2D(x.StorableTexture, x.Data), x.StorableTexture.RotationAngle})
+                .Select(x => new {Texture2D = CreateTexture2D(x.StorableTexture, x.Data), x.StorableTexture.RotationAngle, x.StorableTexture.VerticallyMirrored})
                 // OnCompleted は流さない
                 .Subscribe(
                     x =>
                     {
                         WebCamEntity.Load.Did();
-                        WebCamEntity.RenderStoredTexture.Did(x.Texture2D);
-                        WebCamEntity.ConfirmTextureRotationAngle.Did(x.RotationAngle);
+//                        WebCamEntity.RenderStoredTexture.Did(x.Texture2D);
+//                        WebCamEntity.ConfirmTextureRotationAngle.Did(x.RotationAngle);
+                        WebCamEntity.ConfirmRenderableTexture.Did(RenderableTextureFactory.Create(x.Texture2D, x.RotationAngle, x.VerticallyMirrored));
                     }
                 );
         }

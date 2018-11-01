@@ -13,6 +13,7 @@ namespace CAFU.WebCam.Domain.Structure.Data
         [SerializeField] private TextureFormat textureFormat;
         [SerializeField] private bool mipChain;
         [SerializeField] private int rotationAngle;
+        [SerializeField] private bool verticallyMirrored;
 
         public int Width
         {
@@ -42,6 +43,12 @@ namespace CAFU.WebCam.Domain.Structure.Data
         {
             get { return rotationAngle; }
             set { rotationAngle = value; }
+        }
+
+        public bool VerticallyMirrored
+        {
+            get { return verticallyMirrored; }
+            set { verticallyMirrored = value; }
         }
 
         public IEnumerable<byte> Data { get; set; }

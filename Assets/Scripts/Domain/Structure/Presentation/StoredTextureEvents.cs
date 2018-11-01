@@ -12,6 +12,7 @@ namespace CAFU.WebCam.Domain.Structure.Presentation
         public ITenseSubject<Texture> Render { get; }
         public ITenseSubject Clear { get; }
         public ITenseSubject<int> ConfirmTextureRotationAngle { get; }
+        public ITenseSubject<RenderableTexture> ConfirmRenderableTexture { get; }
 
         public StoredTextureEvents(IWebCamEntity entity)
         {
@@ -20,6 +21,7 @@ namespace CAFU.WebCam.Domain.Structure.Presentation
             Render = entity.RenderStoredTexture;
             Clear = entity.ClearStoredTexture;
             ConfirmTextureRotationAngle = entity.ConfirmTextureRotationAngle;
+            ConfirmRenderableTexture = entity.ConfirmRenderableTexture;
         }
     }
 }
