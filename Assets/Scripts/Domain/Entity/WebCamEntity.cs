@@ -2,6 +2,7 @@ using System;
 using CAFU.Core;
 using CAFU.WebCam.Application;
 using CAFU.WebCam.Domain.Structure.Data;
+using CAFU.WebCam.Domain.Structure.Presentation;
 using ExtraUniRx;
 using UnityEngine;
 
@@ -25,6 +26,7 @@ namespace CAFU.WebCam.Domain.Entity
         ITenseSubject<Texture> RenderStoredTexture { get; }
         ITenseSubject ClearStoredTexture { get; }
         ITenseSubject<int> ConfirmTextureRotationAngle { get; }
+        ITenseSubject<RenderableTexture> ConfirmRenderableTexture { get; }
 
         bool HasResolutionConfirmed();
     }
@@ -45,9 +47,13 @@ namespace CAFU.WebCam.Domain.Entity
         public ITenseSubject<Vector2Int> ConfirmTextureSize { get; } = new TenseSubject<Vector2Int>();
         public ITenseSubject Save { get; } = new TenseSubject();
         public ITenseSubject Load { get; } = new TenseSubject();
+        // XXX: Remove？
         public ITenseSubject<Texture> RenderStoredTexture { get; } = new TenseSubject<Texture>();
         public ITenseSubject ClearStoredTexture { get; } = new TenseSubject();
+        // XXX: Remove
         public ITenseSubject<int> ConfirmTextureRotationAngle { get; } = new TenseSubject<int>();
+
+        public ITenseSubject<RenderableTexture> ConfirmRenderableTexture { get; } = new TenseSubject<RenderableTexture>();
 
         public bool HasResolutionConfirmed()
         {

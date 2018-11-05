@@ -11,6 +11,10 @@ namespace CAFU.WebCam.Application.Installer
             {
                 Container.BindInterfacesAndSelfTo<StorableTextureTranslator>().AsCached();
             }
+            if (!Container.HasBinding<RenderableTextureTranslator>())
+            {
+                Container.BindInterfacesAndSelfTo<RenderableTextureTranslator>().AsCached();
+            }
         }
     }
 }

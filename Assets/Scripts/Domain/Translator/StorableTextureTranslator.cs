@@ -17,6 +17,7 @@ namespace CAFU.WebCam.Domain.Factory
                 TextureFormat = TextureFormat.RGBA32,
                 MipChain = false,
                 RotationAngle = param.WebCamTextureProperty.Value.videoRotationAngle,
+                VerticallyMirrored = param.WebCamTextureProperty.Value.videoVerticallyMirrored,
                 Data = ArrayConverter.Color32ArrayToByteArray(param.WebCamTextureProperty.Value.GetPixels32()),
             };
         }
