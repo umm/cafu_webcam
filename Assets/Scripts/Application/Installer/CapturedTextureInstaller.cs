@@ -3,7 +3,6 @@ using CAFU.WebCam.Data.Repository;
 using CAFU.WebCam.Domain.Structure.Presentation;
 using CAFU.WebCam.Domain.UseCase;
 using CAFU.WebCam.Presentation.Presenter;
-using UnityEngine;
 using Zenject;
 
 namespace CAFU.WebCam.Application.Installer
@@ -32,9 +31,6 @@ namespace CAFU.WebCam.Application.Installer
 
             // Presenters
             Container.BindInterfacesAndSelfTo<StoredTexturePresenter>().AsCached();
-
-            // Factories
-            Container.BindIFactory<Texture2D, int, bool, RenderableTexture>().To<RenderableTexture>();
         }
     }
 }

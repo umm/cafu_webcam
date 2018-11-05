@@ -37,7 +37,7 @@ namespace CAFU.WebCam.Domain.UseCase
         [Inject] private ITranslator<IWebCamEntity, StorableTexture> StorableTextureTranslator { get; set; }
 
         // Factories
-        [Inject] private IFactory<Texture2D, int, bool, RenderableTexture> RenderableTextureFactory { get; set; }
+        [Inject] private ITranslator<Texture2D, int, bool, RenderableTexture> RenderableTextureTranslator { get; set; }
 
         [InjectOptional(Id = Constant.InjectId.UriBuilder)]
         private Func<string, Uri> UriBuilder { get; set; } =
@@ -72,9 +72,7 @@ namespace CAFU.WebCam.Domain.UseCase
                     x =>
                     {
                         WebCamEntity.Load.Did();
-//                        WebCamEntity.RenderStoredTexture.Did(x.Texture2D);
-//                        WebCamEntity.ConfirmTextureRotationAngle.Did(x.RotationAngle);
-                        WebCamEntity.ConfirmRenderableTexture.Did(RenderableTextureFactory.Create(x.Texture2D, x.RotationAngle, x.VerticallyMirrored));
+                        WebCamEntity.ConfirmRenderableTexture.Did(RenderableTextureTranslator.Translate(x.Texture2D, x.RotationAngle, x.VerticallyMirrored));
                     }
                 );
         }
