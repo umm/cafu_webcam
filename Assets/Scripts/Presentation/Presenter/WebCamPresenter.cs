@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CAFU.WebCam.Domain.Structure.Presentation;
 using CAFU.WebCam.Domain.UseCase;
 using UniRx;
 using Zenject;
@@ -12,32 +11,32 @@ namespace CAFU.WebCam.Presentation.Presenter
         IWebCamInitializer,
         IWebCamController
     {
-        [Inject] private IPlayWebCamTrigger PlayWebCamTrigger { get; set; }
+        [Inject] private IEnumerable<IPlayWebCamTrigger> PlayWebCamTriggerList { get; set; }
 
-        [Inject] private IStopWebCamTrigger StopWebCamTrigger { get; set; }
+        [Inject] private IEnumerable<IStopWebCamTrigger> StopWebCamTriggerList { get; set; }
 
-        [Inject] private ICaptureWebCamTrigger CaptureWebCamTrigger { get; set; }
+        [Inject] private IEnumerable<ICaptureWebCamTrigger> CaptureWebCamTriggerList { get; set; }
 
-        [Inject] private IInitializeWebCamTrigger InitializeWebCamTrigger { get; set; }
+        [Inject] private IEnumerable<IInitializeWebCamTrigger> InitializeWebCamTriggerList { get; set; }
 
         public IObservable<Unit> InitializeAsObservable()
         {
-            return InitializeWebCamTrigger.TriggerAsObservable();
+            return InitializeWebCamTriggerList.Select(x => x.TriggerAsObservable()).Merge();
         }
 
         public IObservable<Unit> TriggerPlayAsObservable()
         {
-            return PlayWebCamTrigger.TriggerAsObservable();
+            return PlayWebCamTriggerList.Select(x => x.TriggerAsObservable()).Merge();
         }
 
         public IObservable<Unit> TriggerStopAsObservable()
         {
-            return StopWebCamTrigger.TriggerAsObservable();
+            return StopWebCamTriggerList.Select(x => x.TriggerAsObservable()).Merge();
         }
 
         public IObservable<Unit> TriggerCaptureAsObservable()
         {
-            return CaptureWebCamTrigger.TriggerAsObservable();
+            return CaptureWebCamTriggerList.Select(x => x.TriggerAsObservable()).Merge();
         }
     }
 }
